@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
-  PopulateOptions,
-  PaginateModel,
+  AggregateOptions,
   FilterQuery,
+  InsertManyOptions,
+  PaginateModel,
+  PaginateOptions,
+  PipelineStage,
+  PopulateOptions,
   ProjectionType,
   QueryOptions,
-  PaginateOptions,
-  InsertManyOptions,
+  UpdateQuery,
+  UpdateWithAggregationPipeline,
 } from 'mongoose';
 import { GenericRepository } from '../../abstracts';
 
@@ -16,6 +20,9 @@ interface DefaultOptions<T> {
   options: QueryOptions<T> | null | undefined;
   paginateOptions: PaginateOptions;
   InsertManyOptions: InsertManyOptions;
+  update: UpdateQuery<T> | UpdateWithAggregationPipeline;
+  pipeline: PipelineStage[];
+  aggregateOptions: AggregateOptions;
 }
 
 export class MongoDBGenericRepository<T> implements GenericRepository<T> {
@@ -104,18 +111,33 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     partialData: T[],
     queryOptions: Partial<DefaultOptions<T>> = {},
   ): Promise<T[]> {
-    throw new Error('Method not implemented.');
+    const { filter, options } = queryOptions;
+    const query = this._repository.updateMany(filter, partialData, options);
+    // @ts-ignore
+    return Promise.resolve(query);
   }
   deleteOne(
     id: any,
     queryOptions: Partial<DefaultOptions<T>> = {},
   ): Promise<T> {
-    throw new Error('Method not implemented.');
+    const { filter, options } = queryOptions;
+    const query = this._repository.findOneAndDelete(
+      { ...filter, _id: id },
+      options,
+    );
+    // @ts-ignore
+    return Promise.resolve(query);
   }
   deleteMany(queryOptions: Partial<DefaultOptions<T>> = {}): Promise<T[]> {
-    throw new Error('Method not implemented.');
+    const { filter, options } = queryOptions;
+    const query = this._repository.deleteMany(filter, options);
+    // @ts-ignore
+    return Promise.resolve(query);
   }
-  aggregation(): Promise<object> {
-    throw new Error('Method not implemented.');
+  aggregation(queryOptions: Partial<DefaultOptions<T>> = {}): Promise<any> {
+    const { pipeline, aggregateOptions } = queryOptions;
+    const query = this._repository.aggregate(pipeline, aggregateOptions);
+    // @ts-ignore
+    return Promise.resolve(query);
   }
 }

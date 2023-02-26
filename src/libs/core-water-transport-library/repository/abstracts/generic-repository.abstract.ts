@@ -24,5 +24,5 @@ export abstract class GenericRepository<T> {
   abstract deleteOne(id, queryOptions?: object): Promise<T>;
   abstract deleteMany(queryOptions?: object): Promise<T[]>;
 
-  abstract aggregation(): Promise<object>;
+  abstract aggregation(queryOptions?: object): Promise<any>;
 }
