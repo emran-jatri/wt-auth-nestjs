@@ -18,6 +18,7 @@ import { EnvConfiguration } from './env';
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       cache: 'bounded',
+      introspection: true,
     }),
   ],
   // exports: [

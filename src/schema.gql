@@ -5,3 +5,68 @@
 type Query {
   login: String!
 }
+
+type Mutation {
+  initUser(initUserInput: InitUserInput!): String!
+}
+
+input InitUserInput {
+  commissionType: CommissionTypeEnum!
+  company: String!
+  multipleCompany: [String!]!
+  counter: String!
+  ships: [String!]!
+  name: String!
+  designation: String!
+  phone: String!
+  email: String!
+  password: String!
+  nid: String!
+  address: String!
+  transactionType: String!
+  balance: Float!
+  commission: Float!
+  printerType: PrinterTypeEnum!
+  printingType: PrintingTypeEnum!
+  reportPrintLimit: Float!
+  role: RoleEnum!
+  alreadyLogin: Boolean!
+  deviceToken: String!
+  resetToken: Boolean!
+  cabinmanReserveConfirm: Boolean!
+  permissions: [PermissionEnum!]!
+}
+
+enum CommissionTypeEnum {
+  FIXED
+  PERCENTAGE
+}
+
+enum PrinterTypeEnum {
+  BLUETOOTH
+  T2MINI
+  USB
+}
+
+enum PrintingTypeEnum {
+  INDIVIDUAL
+  GROUP
+}
+
+enum RoleEnum {
+  SUPER_ADMIN
+  ADMIN
+  OWNER
+  SUPERVISOR
+  COUNTERMAN
+  DECKMAN
+  CABINMAN
+}
+
+enum PermissionEnum {
+  DASHBOARD
+  USER_READ
+  USER_WRITE
+  COMPANY_READ
+  COMPANY_WRITE
+}

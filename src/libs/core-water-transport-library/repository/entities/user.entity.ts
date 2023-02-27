@@ -34,6 +34,6 @@ export class UserEntity {
   resetToken: boolean;
   cabinmanReserveConfirm: boolean;
   permissions: PermissionEnum[];
-  createdBy: UserEntity;
+  createdBy?: UserEntity;
   status?: boolean;
 }

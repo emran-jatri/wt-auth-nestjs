@@ -1,21 +1,31 @@
-import { UserEntity } from '../../../repository';
-import {
-  CommissionTypeEnum,
-  PrinterTypeEnum,
-  PrintingTypeEnum,
-  RoleEnum,
-  PermissionEnum,
-} from '../../../common';
+import { Field, InputType, registerEnumType } from '@nestjs/graphql';
+// import { CommissionTypeEnum } from '../../../common';
 import {
   IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
 } from 'class-validator';
+import {
+  CommissionTypeEnum,
+  PermissionEnum,
+  PrinterTypeEnum,
+  PrintingTypeEnum,
+  RoleEnum,
+} from '../../../libs';
 
-export class UserCreateDto {
+// export enum CommissionTypeEnum {
+//   FIXED = 'FIXED',
+//   PERCENTAGE = 'PERCENTAGE',
+// }
+
+// registerEnumType(CommissionTypeEnum, {
+//   name: 'CommissionTypeEnum',
+// });
+
+@InputType()
+export class InitUserInput {
   @IsString()
   company: string;
 
@@ -67,6 +77,7 @@ export class UserCreateDto {
 
   @IsEnum(CommissionTypeEnum)
   @IsString()
+  @Field(() => CommissionTypeEnum)
   commissionType: CommissionTypeEnum;
   // userType: UserTypeEnum;
 
