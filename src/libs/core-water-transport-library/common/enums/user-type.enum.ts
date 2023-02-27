@@ -1,1 +1,3 @@
-export enum UserTypeEnum {}
+export enum UserTypeEnum {
+  COMPANY_OWNER = 'COMPANY_OWNER',
+}

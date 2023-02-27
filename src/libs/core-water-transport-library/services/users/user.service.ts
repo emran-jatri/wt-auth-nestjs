@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { WaterTransportCoreDataServices } from '../../repository';
+import { UserCreateDto } from './dtos';
 
 @Injectable()
 export class UserService {
@@ -7,8 +8,8 @@ export class UserService {
     private readonly waterTransportCoreDataServices: WaterTransportCoreDataServices,
   ) {}
 
-  create() {
-    return 'user create';
+  create(userCreateDto: UserCreateDto) {
+    return this.waterTransportCoreDataServices.users.createOne(userCreateDto);
   }
 
   update() {
