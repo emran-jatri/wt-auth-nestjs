@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongoDBModule } from './repository';
+import { CoreWaterTransportServiceModule } from './services';
 
 @Module({
-  imports: [MongoDBModule],
-  exports: [MongoDBModule],
+  imports: [MongoDBModule, CoreWaterTransportServiceModule],
+  exports: [MongoDBModule, CoreWaterTransportServiceModule],
 })
 export class CoreWaterTransportLibraryModule {}
