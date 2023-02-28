@@ -2,15 +2,8 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Query {
-  login: String!
-}
-
-type Mutation {
-  initUser(initUserInput: InitUserInput!): String!
-}
-
-input InitUserInput {
+type User {
+  _id: String
   company: String!
   multipleCompany: [String!]!
   counter: String!
@@ -35,6 +28,8 @@ input InitUserInput {
   resetToken: Boolean!
   cabinmanReserveConfirm: Boolean!
   permissions: [PermissionEnum!]!
+  createdBy: User
+  status: Boolean
 }
 
 enum CommissionTypeEnum {
@@ -69,4 +64,22 @@ enum PermissionEnum {
   USER_WRITE
   COMPANY_READ
   COMPANY_WRITE
+}
+
+type Query {
+  login: String!
+}
+
+type Mutation {
+  initUser(initUserInput: InitUserInput!): User!
+}
+
+input InitUserInput {
+  name: String!
+  designation: String!
+  phone: String!
+  email: String!
+  password: String!
+  nid: String!
+  address: String!
 }

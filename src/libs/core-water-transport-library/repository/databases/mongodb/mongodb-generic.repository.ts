@@ -79,12 +79,7 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
   }
   createOne(item: T): Promise<T> {
     // const query = this._repository.create(item);
-    let query = new this._repository(item).save();
-
-    // @ts-ignore
-    query = query.populate(this._populateOnFind);
-    // @ts-ignore
-    return Promise.resolve(query.lean());
+    return this._repository.create(item);
   }
   createMany(items: T[]): Promise<T[]> {
     const query = this._repository.insertMany(items, {

@@ -13,16 +13,16 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema({ timestamps: true, versionKey: false })
 export class User {
-  @Prop({ type: String, trim: true, required: true })
+  @Prop({ type: String, trim: true })
   company: string;
 
-  @Prop({ type: String, trim: true, required: true })
+  @Prop([{ type: String, trim: true }])
   multipleCompany: string[];
 
-  @Prop({ type: String, trim: true, required: true })
+  @Prop({ type: String, trim: true })
   counter: string;
 
-  @Prop({ type: String, trim: true, required: true })
+  @Prop([{ type: String, trim: true }])
   ships: string[];
 
   @Prop({ type: String, trim: true, required: true })
@@ -64,10 +64,10 @@ export class User {
   @Prop({ type: String, enum: PrintingTypeEnum })
   printingType: PrintingTypeEnum;
 
-  @Prop({ type: String, enum: PrintingTypeEnum })
+  @Prop({ type: String, enum: RoleEnum })
   role: RoleEnum;
 
-  @Prop({ type: String, enum: PrintingTypeEnum })
+  @Prop([{ type: String, enum: PermissionEnum }])
   permissions: PermissionEnum[];
 
   @Prop({ type: Number, default: 0 })
@@ -85,7 +85,7 @@ export class User {
   @Prop({ type: Boolean, default: false })
   cabinmanReserveConfirm: boolean;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   createdBy: UserEntity;
 
   @Prop({ type: Boolean, required: true })

@@ -1,12 +1,13 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { InitUserInput } from './dtos';
 import { LoginService } from './';
+import { InitUserInput } from './dtos';
+import { User } from './entities';
 
 @Resolver()
 export class LoginResolver {
   constructor(private readonly loginService: LoginService) {}
 
-  @Mutation(() => String)
+  @Mutation(() => User)
   initUser(@Args('initUserInput') initUserInput: InitUserInput) {
     return this.loginService.initUser(initUserInput);
   }

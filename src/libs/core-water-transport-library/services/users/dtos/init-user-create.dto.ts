@@ -1,9 +1,6 @@
-import { InputType } from '@nestjs/graphql';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { CommissionTypeEnum } from '../../../common';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-@InputType()
-export class InitUserInput {
+export class InitUserCreateDto {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -31,7 +28,4 @@ export class InitUserInput {
   @IsString()
   @IsNotEmpty()
   address: string;
-
-  // @IsEnum(CommissionTypeEnum)
-  // commissionType: CommissionTypeEnum;
 }

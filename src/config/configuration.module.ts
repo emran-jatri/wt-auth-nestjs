@@ -19,18 +19,29 @@ import { EnvConfiguration } from './env';
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       cache: 'bounded',
       introspection: true,
+      formatResponse: (res, ctx) => {
+        return {
+          ...res,
+        };
+      },
+      formatError: (err) => {
+        const { code, status } = err.extensions;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const message = err?.extensions?.response?.message || err.message;
+        // @ts-ignore
+        const errStatus = err?.extensions?.response?.statusCode || status || 400;
+        return {
+          status: errStatus,
+          code,
+          message:
+            Array.isArray(message) && message.length > 0
+              ? message.join(', ')
+              : message,
+          path: err.path,
+        };
+      },
     }),
   ],
-  // exports: [
-  //   ConfigModule.forRoot({
-  //     load: [EnvConfiguration, MongoDBConfiguration],
-  //   }),
-  //   GraphQLModule.forRoot<ApolloDriverConfig>({
-  //     driver: ApolloDriver,
-  //     autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-  //     playground: false,
-  //     plugins: [ApolloServerPluginLandingPageLocalDefault()],
-  //   }),
-  // ],
 })
 export class ConfigurationModule {}
