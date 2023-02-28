@@ -1,5 +1,4 @@
-import { Field, InputType, registerEnumType } from '@nestjs/graphql';
-// import { CommissionTypeEnum } from '../../../common';
+import { InputType } from '@nestjs/graphql';
 import {
   IsBoolean,
   IsEnum,
@@ -13,16 +12,7 @@ import {
   PrinterTypeEnum,
   PrintingTypeEnum,
   RoleEnum,
-} from '../../../libs';
-
-// export enum CommissionTypeEnum {
-//   FIXED = 'FIXED',
-//   PERCENTAGE = 'PERCENTAGE',
-// }
-
-// registerEnumType(CommissionTypeEnum, {
-//   name: 'CommissionTypeEnum',
-// });
+} from '../../../common';
 
 @InputType()
 export class InitUserInput {
@@ -77,9 +67,7 @@ export class InitUserInput {
 
   @IsEnum(CommissionTypeEnum)
   @IsString()
-  @Field(() => CommissionTypeEnum)
   commissionType: CommissionTypeEnum;
-  // userType: UserTypeEnum;
 
   @IsEnum(PrinterTypeEnum)
   @IsString()

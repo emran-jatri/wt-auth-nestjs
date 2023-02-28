@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+// import './common';
 
 async function bootstrap() {
   const logger = new Logger('main.ts', { timestamp: true });
