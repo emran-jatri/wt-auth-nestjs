@@ -4,6 +4,8 @@ import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import { ValidationError } from 'class-validator';
+import { UserInputError } from 'apollo-server-core';
 // import './common';
 
 async function bootstrap() {
@@ -18,6 +20,13 @@ async function bootstrap() {
       new ValidationPipe({
         whitelist: true,
         transform: true,
+        exceptionFactory: (errs: ValidationError[]) => {
+          return new UserInputError('Validation Error', {
+            validationErrors: errs,
+            code: 'ValidationError',
+            statusCode: 400,
+          });
+        },
       }),
     );
     app.enableVersioning({

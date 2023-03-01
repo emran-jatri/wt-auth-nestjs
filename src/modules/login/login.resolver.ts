@@ -12,7 +12,7 @@ export class LoginResolver {
   initUser(@Args('initUserInput') initUserInput: InitUserInput) {
     throw new GraphQLError('Something went wrong!', {
       extensions: {
-        code: 400,
+        statusCode: 401,
       },
     });
     return this.loginService.initUser(initUserInput);
