@@ -1,29 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import {
-  AggregateOptions,
-  FilterQuery,
-  InsertManyOptions,
-  PaginateModel,
-  PaginateOptions,
-  PipelineStage,
-  PopulateOptions,
-  ProjectionType,
-  QueryOptions,
-  UpdateQuery,
-  UpdateWithAggregationPipeline,
-} from 'mongoose';
+import { PaginateModel, PopulateOptions } from 'mongoose';
 import { GenericRepository } from '../../abstracts';
-
-interface DefaultOptions<T> {
-  filter: FilterQuery<T>;
-  projection: ProjectionType<T> | null | undefined;
-  options: QueryOptions<T> | null | undefined;
-  paginateOptions: PaginateOptions;
-  InsertManyOptions: InsertManyOptions;
-  update: UpdateQuery<T> | UpdateWithAggregationPipeline;
-  pipeline: PipelineStage[];
-  aggregateOptions: AggregateOptions;
-}
+import { MongoDBQueryOptions } from './../../../common';
 
 export class MongoDBGenericRepository<T> implements GenericRepository<T> {
   private _repository: PaginateModel<T>;
@@ -47,7 +25,17 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     this._populateOnFind = populateOnFind;
   }
 
-  findOne(id: any, queryOptions: Partial<DefaultOptions<T>> = {}): Promise<T> {
+  findOne(queryOptions: Partial<MongoDBQueryOptions<T>> = {}): Promise<T> {
+    const { filter, projection, options } = queryOptions;
+    const query = this._repository.findOne(filter, projection, options);
+    // @ts-ignore
+    return Promise.resolve(query.lean());
+  }
+
+  findOneById(
+    id: any,
+    queryOptions: Partial<MongoDBQueryOptions<T>> = {},
+  ): Promise<T> {
     const { filter, projection, options } = queryOptions;
     const query = this._repository.findOne(
       { ...filter, _id: id },
@@ -57,7 +45,7 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     // @ts-ignore
     return Promise.resolve(query.lean());
   }
-  findMany(queryOptions: Partial<DefaultOptions<T>> = {}): Promise<T[]> {
+  findMany(queryOptions: Partial<MongoDBQueryOptions<T>> = {}): Promise<T[]> {
     const { filter, projection, options } = queryOptions;
     const query = this._repository.find(filter, projection, options);
     // @ts-ignore
@@ -66,7 +54,7 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
   findManyWithPaginate(
     page: number,
     limit: number,
-    queryOptions: Partial<DefaultOptions<T>> = {},
+    queryOptions: Partial<MongoDBQueryOptions<T>> = {},
   ): Promise<T[]> {
     const { filter, paginateOptions } = queryOptions;
     const query = this._repository.paginate(filter, {
@@ -91,7 +79,7 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
   updateOne(
     id: any,
     partialData: Partial<T>,
-    queryOptions: Partial<DefaultOptions<T>> = {},
+    queryOptions: Partial<MongoDBQueryOptions<T>> = {},
   ): Promise<T> {
     const { filter, options } = queryOptions;
     const query = this._repository.findOneAndUpdate(
@@ -104,7 +92,7 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
   }
   updateMany(
     partialData: T[],
-    queryOptions: Partial<DefaultOptions<T>> = {},
+    queryOptions: Partial<MongoDBQueryOptions<T>> = {},
   ): Promise<T[]> {
     const { filter, options } = queryOptions;
     const query = this._repository.updateMany(filter, partialData, options);
@@ -113,7 +101,7 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
   }
   deleteOne(
     id: any,
-    queryOptions: Partial<DefaultOptions<T>> = {},
+    queryOptions: Partial<MongoDBQueryOptions<T>> = {},
   ): Promise<T> {
     const { filter, options } = queryOptions;
     const query = this._repository.findOneAndDelete(
@@ -123,13 +111,15 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     // @ts-ignore
     return Promise.resolve(query);
   }
-  deleteMany(queryOptions: Partial<DefaultOptions<T>> = {}): Promise<T[]> {
+  deleteMany(queryOptions: Partial<MongoDBQueryOptions<T>> = {}): Promise<T[]> {
     const { filter, options } = queryOptions;
     const query = this._repository.deleteMany(filter, options);
     // @ts-ignore
     return Promise.resolve(query);
   }
-  aggregation(queryOptions: Partial<DefaultOptions<T>> = {}): Promise<any> {
+  aggregation(
+    queryOptions: Partial<MongoDBQueryOptions<T>> = {},
+  ): Promise<any> {
     const { pipeline, aggregateOptions } = queryOptions;
     const query = this._repository.aggregate(pipeline, aggregateOptions);
     // @ts-ignore

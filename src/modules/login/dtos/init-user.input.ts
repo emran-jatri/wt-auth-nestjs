@@ -1,6 +1,5 @@
 import { InputType } from '@nestjs/graphql';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { CommissionTypeEnum } from '../../../common';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 @InputType()
 export class InitUserInput {

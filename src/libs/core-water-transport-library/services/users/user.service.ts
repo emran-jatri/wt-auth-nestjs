@@ -16,6 +16,8 @@ export class UserService {
   ) {}
 
   create(initUserCreateDto: InitUserCreateDto) {
+    this.waterTransportCoreDataServices.users.findOne();
+
     return this.waterTransportCoreDataServices.users.createOne({
       ...initUserCreateDto,
       company: '',
