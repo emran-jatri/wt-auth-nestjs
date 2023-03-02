@@ -39,10 +39,6 @@ export class LoginService {
       accessToken,
       refreshToken,
     };
-    console.log(
-      '🚀 ~ file: login.service.ts:36 ~ LoginService ~ login ~ responsePayload:',
-      responsePayload,
-    );
 
     return 'responsePayload';
   }
