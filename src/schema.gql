@@ -67,7 +67,12 @@ enum PermissionEnum {
 }
 
 type Query {
-  login: String!
+  login(loginInput: LoginInput!): String!
+}
+
+input LoginInput {
+  phone: String!
+  password: String!
 }
 
 type Mutation {

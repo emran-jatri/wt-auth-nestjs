@@ -1,8 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { LoginService } from './';
-import { InitUserInput } from './dtos';
+import { InitUserInput, LoginInput } from './dtos';
 import { User } from './entities';
-import { GraphQLError } from 'graphql';
 
 @Resolver()
 export class LoginResolver {
@@ -19,7 +18,7 @@ export class LoginResolver {
   }
 
   @Query(() => String)
-  async login() {
-    return 'login';
+  login(@Args('loginInput') loginInput: LoginInput) {
+    return this.loginService.login(loginInput);
   }
 }

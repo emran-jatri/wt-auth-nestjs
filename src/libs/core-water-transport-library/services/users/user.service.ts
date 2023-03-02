@@ -43,6 +43,7 @@ export class UserService {
       status: true,
     });
   }
+
   async create(initUserCreateDto: InitUserCreateDto) {
     const password = await argon2.hash(initUserCreateDto.password);
     return this.waterTransportCoreDataServices.users.createOne({
