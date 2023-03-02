@@ -29,7 +29,7 @@ type User {
   cabinmanReserveConfirm: Boolean!
   permissions: [PermissionEnum!]!
   createdBy: User
-  status: Boolean
+  status: Boolean!
 }
 
 enum CommissionTypeEnum {

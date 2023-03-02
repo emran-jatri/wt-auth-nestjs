@@ -1,5 +1,5 @@
 import { ObjectType } from '@nestjs/graphql';
-import { IsEnum } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
 import {
   CommissionTypeEnum,
   PermissionEnum,
@@ -49,5 +49,5 @@ export class User {
   permissions: PermissionEnum[];
 
   createdBy?: User;
-  status?: boolean;
+  status: boolean;
 }

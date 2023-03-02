@@ -7,6 +7,6 @@ export class LoginService {
   constructor(private readonly userService: UserService) {}
 
   initUser(initUserInput: InitUserInput) {
-    return this.userService.create(initUserInput);
+    return this.userService.init(initUserInput);
   }
 }

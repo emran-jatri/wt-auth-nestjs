@@ -16,7 +16,8 @@ const statusCodePlugin: ApolloServerPlugin = {
         const errors = (requestContext?.response?.errors || []) as any[];
         // console.log(errors);
         for (const err of errors) {
-          requestContext.response.http.status = err?.statusCode;
+          requestContext.response.http.status =
+            err?.statusCode || err.extensions?.response?.statusCode;
         }
       },
     };
@@ -40,47 +41,21 @@ const statusCodePlugin: ApolloServerPlugin = {
           ...res,
         };
       },
-      // formatError: (err) => {
-      //   const { code, status } = err.extensions;
-      //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //   // @ts-ignore
-      //   const message = err?.extensions?.response?.message || err.message;
-      //   const errStatus =
-      //     // @ts-ignore
-      //     err?.extensions?.response?.statusCode || status || 400;
-      //   return {
-      //     statusCode: errStatus,
-      //     code,
-      //     message:
-      //       Array.isArray(message) && message.length > 0
-      //         ? message.join(', ')
-      //         : message,
-      //     path: err.path,
-      //   };
-      // },
 
       formatError: (error: GraphQLError) => {
-        // remove exception details
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { exception: _, ...extensions } = error.extensions;
-        console.log(
-          '🚀 ~ file: configuration.module.ts:66 ~ extensions:',
-          extensions,
-        );
-
-        // return <GraphQLFormattedError>{
-        //   message: error.message,
-        //   extensions: extensions,
-        //   locations: error.locations,
-        //   path: error.path,
-        // };
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const message = extensions?.response?.message || error.message;
         return <GraphQLFormattedError>{
-          extensions,
-          message,
+          ...extensions,
+          message:
+            Array.isArray(message) && message.length > 0
+              ? message.join(', ')
+              : message,
+          path: error.path,
         };
       },
     }),

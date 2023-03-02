@@ -10,11 +10,11 @@ export class LoginResolver {
 
   @Mutation(() => User)
   initUser(@Args('initUserInput') initUserInput: InitUserInput) {
-    throw new GraphQLError('Something went wrong!', {
-      extensions: {
-        statusCode: 401,
-      },
-    });
+    // throw new GraphQLError('Something went wrong!', {
+    //   extensions: {
+    //     statusCode: 401,
+    //   },
+    // });
     return this.loginService.initUser(initUserInput);
   }
 
