@@ -22,7 +22,7 @@ export class UserService {
       initUserCreateDto,
     );
     // const password = await argon2.hash(initUserCreateDto.password);
-    const password = initUserCreateDto.password;
+    const password = await argon2.hash(initUserCreateDto.password);
     console.log(
       '🚀 ~ file: user.service.ts:25 ~ UserService ~ init ~ password:',
       password,
@@ -30,11 +30,11 @@ export class UserService {
     return this.waterTransportCoreDataServices.users.createOne({
       ...initUserCreateDto,
       password,
-      company: 'asdfasd',
-      multipleCompany: ['asdfdas'],
-      counter: 'asdfads',
-      ships: ['adsfasdf'],
-      transactionType: 'asdfadsdas',
+      company: '',
+      multipleCompany: [],
+      counter: '',
+      ships: [],
+      transactionType: '',
       balance: 0,
       commission: 0,
       commissionType: CommissionTypeEnum.FIXED,

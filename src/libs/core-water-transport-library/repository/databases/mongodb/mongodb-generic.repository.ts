@@ -66,17 +66,7 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     return Promise.resolve(query.lean());
   }
   createOne(item: T): Promise<T> {
-    console.log(
-      '🚀 ~ file: mongodb-generic.repository.ts:69 ~ MongoDBGenericRepository<T> ~ createOne ~ createOne:',
-      item,
-    );
-    const query = this._repository.create(item);
-    console.log(
-      '🚀 ~ file: mongodb-generic.repository.ts:74 ~ MongoDBGenericRepository<T> ~ createOne ~ query:',
-      query,
-    );
-    // @ts-ignore
-    return Promise.resolve(query);
+    return this._repository.create(item);
   }
   createMany(items: T[]): Promise<T[]> {
     const query = this._repository.insertMany(items, {
