@@ -17,16 +17,8 @@ export class UserService {
   ) {}
 
   async init(initUserCreateDto: InitUserCreateDto) {
-    console.log(
-      '🚀 ~ file: user.service.ts:20 ~ UserService ~ init ~ initUserCreateDto:',
-      initUserCreateDto,
-    );
-    // const password = await argon2.hash(initUserCreateDto.password);
     const password = await argon2.hash(initUserCreateDto.password);
-    console.log(
-      '🚀 ~ file: user.service.ts:25 ~ UserService ~ init ~ password:',
-      password,
-    );
+
     return this.waterTransportCoreDataServices.users.createOne({
       ...initUserCreateDto,
       password,

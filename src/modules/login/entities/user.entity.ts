@@ -25,29 +25,16 @@ export class User {
   transactionType: string;
   balance: number;
   commission: number;
-
-  @IsEnum(CommissionTypeEnum)
   commissionType: CommissionTypeEnum;
-
-  @IsEnum(PrinterTypeEnum)
   printerType: PrinterTypeEnum;
-
-  @IsEnum(PrintingTypeEnum)
   printingType: PrintingTypeEnum;
-
   reportPrintLimit: number;
-
-  @IsEnum(RoleEnum)
   role: RoleEnum;
-
   alreadyLogin: boolean;
   deviceToken: string;
   resetToken: boolean;
   cabinmanReserveConfirm: boolean;
-
-  @IsEnum(PermissionEnum)
   permissions: PermissionEnum[];
-
   createdBy?: User;
   status: boolean;
 }
