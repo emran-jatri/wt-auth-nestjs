@@ -1,5 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
+import { PermissionEnum } from '../enums';
 
-export const HAS_PERMISSION_KEY = 'hasPermission';
-export const HasPermission = (permission: number) =>
-  SetMetadata(HAS_PERMISSION_KEY, permission);
+export const PERMISSIONS_KEY = 'permissions';
+export const Permissions = (...permissions: PermissionEnum[]) =>
+  SetMetadata(PERMISSIONS_KEY, permissions);

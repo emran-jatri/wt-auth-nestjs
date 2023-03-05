@@ -6,26 +6,30 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { HAS_PERMISSION_KEY } from '../decorators';
+import { PERMISSIONS_KEY } from '../decorators';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { PermissionEnum } from '../enums';
+import { GQLForbiddenException } from '../helpers';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const permission = this.reflector.getAllAndOverride<string>(
-      HAS_PERMISSION_KEY,
+    const permissions = this.reflector.getAllAndOverride<PermissionEnum[]>(
+      PERMISSIONS_KEY,
       [context.getHandler(), context.getClass()],
     );
-
-    if (!permission) {
+    if (!permissions) {
       return true;
     }
-    const { user } = context.switchToHttp().getRequest();
-    const hasPermission = user.permissions.includes(permission);
-    if (hasPermission) {
-      return true;
+    const { user } = GqlExecutionContext.create(context).getContext().req;
+    const hasPermission = permissions.some((permission) =>
+      user.permissions.includes(permission),
+    );
+    if (!hasPermission) {
+      GQLForbiddenException('Permission Denied!');
     }
-    throw new HttpException('Permission Denied!', HttpStatus.FORBIDDEN);
+    return true;
   }
 }

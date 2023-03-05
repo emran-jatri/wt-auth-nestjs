@@ -4,10 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { ValidationError } from 'class-validator';
-import { UserInputError } from 'apollo-server-core';
 import { TrimPipe } from './common';
-// import './common';
 
 async function bootstrap() {
   const logger = new Logger('main.ts', { timestamp: true });

@@ -64,8 +64,6 @@ enum PermissionEnum {
   USER_WRITE
   COMPANY_READ
   COMPANY_WRITE
-  GHAT_READ
-  GHAT_WRITE
 }
 
 type LoginEntity {
@@ -75,17 +73,12 @@ type LoginEntity {
 
 type Query {
   login(loginInput: LoginInput!): LoginEntity!
-  refreshToken(refreshTokenInput: RefreshTokenInput!): LoginEntity!
-  getProfile: User!
+  refreshToken: String!
 }
 
 input LoginInput {
   phone: String!
   password: String!
-}
-
-input RefreshTokenInput {
-  refreshToken: String!
 }
 
 type Mutation {

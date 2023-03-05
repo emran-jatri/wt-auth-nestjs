@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
+import { PassportModule } from '@nestjs/passport';
 import {
   JwtAuthGuard,
   JwtStrategy,
@@ -9,8 +10,6 @@ import {
 import { ConfigurationModule } from './config';
 import { CoreWaterTransportLibraryModule } from './libs';
 import { AuthModule } from './modules';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigurationModule,
