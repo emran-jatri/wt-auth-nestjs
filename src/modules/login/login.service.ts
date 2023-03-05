@@ -1,15 +1,23 @@
+import {
+  GQLBadRequestException,
+  GQLNotFoundException,
+  INVALID_USERNAME_OR_PASSWORD,
+  USER_NOT_FOUND,
+} from './../../common';
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../../libs';
-import { InitUserInput, LoginInput } from './dtos';
+import { UserService, WaterTransportCoreDataServices } from '../../libs';
+import { InitUserInput, LoginInput, RefreshTokenInput } from './dtos';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class LoginService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
+    private readonly waterTransportCoreDataServices: WaterTransportCoreDataServices,
   ) {}
 
   initUser(initUserInput: InitUserInput) {
@@ -17,17 +25,34 @@ export class LoginService {
   }
 
   async login(loginInput: LoginInput) {
-    console.log(this.configService.get('accessToken.secret'));
+    const { phone, password } = loginInput;
+
+    const user = await this.waterTransportCoreDataServices.users.findOne({
+      filter: {
+        phone,
+      },
+    });
+
+    if (!user) {
+      GQLNotFoundException(USER_NOT_FOUND);
+    }
+
+    const passwordVerified = await argon2.verify(user.password, password);
+
+    if (!passwordVerified) {
+      GQLBadRequestException(INVALID_USERNAME_OR_PASSWORD);
+    }
+
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
-        { name: 'Emran' },
+        { _id: user._id },
         {
           secret: this.configService.get('accessToken.secret'),
           expiresIn: this.configService.get('accessToken.expireIn'),
         },
       ),
       this.jwtService.signAsync(
-        { _id: '132412534' },
+        { _id: user._id },
         {
           secret: this.configService.get('refreshToken.secret'),
           expiresIn: this.configService.get('refreshToken.expireIn'),
@@ -40,6 +65,39 @@ export class LoginService {
       refreshToken,
     };
 
-    return 'responsePayload';
+    return responsePayload;
+  }
+
+  async refreshToken(refreshTokenInput: RefreshTokenInput) {
+    // const { refreshToken: token } = refreshTokenInput;
+
+    // const user = await this.waterTransportCoreDataServices.users.findOneById();
+
+    // if (!user) {
+    //   GQLNotFoundException(USER_NOT_FOUND);
+    // }
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        { _id: 'lkjasdlfkjklajsdf' },
+        {
+          secret: this.configService.get('accessToken.secret'),
+          expiresIn: this.configService.get('accessToken.expireIn'),
+        },
+      ),
+      this.jwtService.signAsync(
+        { _id: 'lkjasdlfkjklajsdf' },
+        {
+          secret: this.configService.get('refreshToken.secret'),
+          expiresIn: this.configService.get('refreshToken.expireIn'),
+        },
+      ),
+    ]);
+
+    const responsePayload = {
+      accessToken,
+      refreshToken,
+    };
+    return responsePayload;
   }
 }

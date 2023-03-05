@@ -1,0 +1,96 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  _id: String!
+  company: String!
+  multipleCompany: [String!]!
+  counter: String!
+  ships: [String!]!
+  name: String!
+  designation: String!
+  phone: String!
+  email: String!
+  password: String!
+  nid: String!
+  address: String!
+  transactionType: String!
+  balance: Float!
+  commission: Float!
+  commissionType: CommissionTypeEnum!
+  printerType: PrinterTypeEnum!
+  printingType: PrintingTypeEnum!
+  reportPrintLimit: Float!
+  role: RoleEnum!
+  alreadyLogin: Boolean!
+  deviceToken: String!
+  resetToken: Boolean!
+  cabinmanReserveConfirm: Boolean!
+  permissions: [PermissionEnum!]!
+  createdBy: User
+  status: Boolean!
+}
+
+enum CommissionTypeEnum {
+  FIXED
+  PERCENTAGE
+}
+
+enum PrinterTypeEnum {
+  BLUETOOTH
+  T2MINI
+  USB
+}
+
+enum PrintingTypeEnum {
+  INDIVIDUAL
+  GROUP
+}
+
+enum RoleEnum {
+  SUPER_ADMIN
+  ADMIN
+  OWNER
+  SUPERVISOR
+  COUNTERMAN
+  DECKMAN
+  CABINMAN
+}
+
+enum PermissionEnum {
+  DASHBOARD
+  USER_READ
+  USER_WRITE
+  COMPANY_READ
+  COMPANY_WRITE
+}
+
+type LoginEntity {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type Query {
+  login(loginInput: LoginInput!): LoginEntity!
+  refreshToken: String!
+}
+
+input LoginInput {
+  phone: String!
+  password: String!
+}
+
+type Mutation {
+  initUser(initUserInput: InitUserInput!): User!
+}
+
+input InitUserInput {
+  name: String!
+  designation: String!
+  phone: String!
+  email: String!
+  password: String!
+  nid: String!
+  address: String!
+}

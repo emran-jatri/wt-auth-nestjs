@@ -1,5 +1,4 @@
 import { ObjectType } from '@nestjs/graphql';
-import { IsEnum, IsOptional } from 'class-validator';
 import {
   CommissionTypeEnum,
   PermissionEnum,
@@ -10,7 +9,7 @@ import {
 
 @ObjectType()
 export class User {
-  _id?: string;
+  _id: string;
   company: string;
   multipleCompany: string[];
   counter: string;

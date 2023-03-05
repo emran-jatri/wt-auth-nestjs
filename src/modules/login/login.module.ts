@@ -1,19 +1,14 @@
-import { ConfigurationModule, JwtConfiguration } from './../../config';
+import { JwtStrategy } from './../../common';
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from '../../libs';
 import { LoginResolver } from './login.resolver';
 import { LoginService } from './login.service';
-import { UserModule } from '../../libs';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      load: [JwtConfiguration],
-    }),
-    JwtModule.register({}),
-    UserModule,
-  ],
+  imports: [JwtModule.register({}), UserModule],
+
   providers: [LoginResolver, LoginService],
 })
 export class LoginModule {}
