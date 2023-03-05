@@ -38,12 +38,6 @@ const statusCodePlugin: ApolloServerPlugin = {
       formatError: (error: GraphQLError) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { exception: _, ...extensions } = error.extensions;
-        console.log('🚀 ~ file: graphql.module.ts:41 ~ exception:', _);
-        console.log('🚀 ~ file: graphql.module.ts:64 ~ error:', error);
-        console.log(
-          '🚀 ~ file: graphql.module.ts:41 ~ extensions:',
-          extensions,
-        );
 
         const status = extensions?.code;
         const statusCode =

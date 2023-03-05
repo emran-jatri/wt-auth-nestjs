@@ -5,17 +5,13 @@ import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from '../decorators';
 
 @Injectable()
-export class GqlAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(private reflector: Reflector) {
     super();
   }
 
   getRequest(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
-    console.log(
-      '🚀 ~ file: gql-auth.guard.ts:14 ~ GqlAuthGuard ~ getRequest ~ getRequest:',
-      'getRequest',
-    );
     return ctx.getContext().req;
   }
 
@@ -28,11 +24,6 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     if (isPublic) {
       return true;
     }
-
-    console.log(
-      '🚀 ~ file: gql-auth.guard.ts:19 ~ GqlAuthGuard ~ canActivate ~ canActivate:',
-      'canActivate',
-    );
     return super.canActivate(context);
   }
 }

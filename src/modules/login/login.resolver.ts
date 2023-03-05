@@ -13,22 +13,22 @@ export class LoginResolver {
     return this.loginService.initUser(initUserInput);
   }
 
-  // @Public()
+  @Public()
   @Query(() => LoginEntity)
   login(@Args('loginInput') loginInput: LoginInput) {
     return this.loginService.login(loginInput);
   }
 
-  @Query(() => String)
+  @Public()
+  @Query(() => LoginEntity)
   refreshToken(
-    // @Args('refreshTokenInput') refreshTokenInput: RefreshTokenInput,
-    @CurrentUser() user,
+    @Args('refreshTokenInput') refreshTokenInput: RefreshTokenInput,
   ) {
-    console.log(
-      '🚀 ~ file: login.resolver.ts:27 ~ LoginResolver ~ user:',
-      user,
-    );
-    return 'lkjasdlfkjlkjasdf';
-    // return this.loginService.refreshToken();
+    return this.loginService.refreshToken(refreshTokenInput);
+  }
+
+  @Query(() => User)
+  getProfile(@CurrentUser() user) {
+    return this.loginService.getProfile(user);
   }
 }

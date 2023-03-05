@@ -73,12 +73,17 @@ type LoginEntity {
 
 type Query {
   login(loginInput: LoginInput!): LoginEntity!
-  refreshToken: String!
+  refreshToken(refreshTokenInput: RefreshTokenInput!): LoginEntity!
+  getProfile: User!
 }
 
 input LoginInput {
   phone: String!
   password: String!
+}
+
+input RefreshTokenInput {
+  refreshToken: String!
 }
 
 type Mutation {

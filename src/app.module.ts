@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import {
-  GqlAuthGuard,
+  JwtAuthGuard,
   JwtStrategy,
   PermissionGuard,
   RoleGuard,
@@ -22,16 +22,16 @@ import { JwtModule } from '@nestjs/jwt';
     JwtStrategy,
     {
       provide: APP_GUARD,
-      useClass: GqlAuthGuard,
+      useClass: JwtAuthGuard,
     },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: RoleGuard,
-    // },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: PermissionGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard,
+    },
   ],
 })
 export class AppModule {}
