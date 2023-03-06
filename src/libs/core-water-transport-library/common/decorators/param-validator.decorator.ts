@@ -13,7 +13,7 @@ type validationMetaData<T> = {
  * @template T - class validator class type
  * @param {ClassConstructor<T>} classConstructor - class validator class constructor
  */
-export function ShouldValidate<T>(classConstructor: ClassConstructor<T>) {
+export function ValidArgs<T>(classConstructor: ClassConstructor<T>) {
   return function (target: object, key: string | symbol, index: number) {
     const argsToValidate: Array<validationMetaData<any>> =
       Reflect.getOwnMetadata(validationMetaKey, target, key) || [];
@@ -27,7 +27,7 @@ export function ShouldValidate<T>(classConstructor: ClassConstructor<T>) {
 }
 /**
  * This is function decorator validates function arguments with
- * ShouldValidate() param decorator
+ * ValidArgs() param decorator
  *
  * @throws {ServiceError} - If something goes wrong during validation
  * @throws {InputValidationError} - thrown if validation fails validation
@@ -36,7 +36,7 @@ export function ValidateArgs() {
   return function (target: any, key: string, descriptor: PropertyDescriptor) {
     const method = descriptor.value;
     descriptor.value = async function (...args: any[]) {
-      // retrieving validation metadata stored in ShouldValidate() function
+      // retrieving validation metadata stored in ValidArgs() function
       const argsToValidate: Array<validationMetaData<any>> =
         Reflect.getOwnMetadata(validationMetaKey, target, key);
       if (argsToValidate) {

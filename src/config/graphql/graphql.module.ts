@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
-import { join } from 'path';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
+import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { join } from 'path';
+import { SlackModule, SlackService } from '../../common';
 
 const statusCodePlugin: ApolloServerPlugin = {
   async requestDidStart(requestContext) {
@@ -22,44 +23,54 @@ const statusCodePlugin: ApolloServerPlugin = {
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/config/graphql/schema.gql'),
-      playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault(), statusCodePlugin],
-      cache: 'bounded',
-      introspection: true,
-      formatResponse: (res, ctx) => {
-        return {
-          ...res,
-        };
-      },
+      imports: [SlackModule],
+      inject: [SlackService],
+      useFactory: (slackService: SlackService) => ({
+        autoSchemaFile: join(process.cwd(), 'src/config/graphql/schema.gql'),
+        playground: false,
+        plugins: [
+          ApolloServerPluginLandingPageLocalDefault(),
+          statusCodePlugin,
+        ],
+        cache: 'bounded',
+        introspection: true,
+        formatResponse: (res, ctx) => {
+          return {
+            ...res,
+          };
+        },
 
-      formatError: (error: GraphQLError) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { exception: _, ...extensions } = error.extensions;
+        formatError: (error: GraphQLError) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { exception: _, ...extensions } = error.extensions;
 
-        const status = extensions?.code;
-        const statusCode =
+          const status = extensions?.code;
+          const statusCode =
+            // @ts-ignore
+            extensions?.response?.statusCode || extensions?.statusCode || 500;
+
           // @ts-ignore
-          extensions?.response?.statusCode || extensions?.statusCode || 500;
+          let message = extensions?.response?.message || error?.message;
+          message =
+            Array.isArray(message) && message.length > 0
+              ? message.join(', ')
+              : message;
 
-        // @ts-ignore
-        let message = extensions?.response?.message || error?.message;
-        message =
-          Array.isArray(message) && message.length > 0
-            ? message.join(', ')
-            : message;
+          const path = error.path ?? null;
 
-        const path = error.path ?? null;
+          const errorResponse = {
+            status,
+            statusCode,
+            message,
+            path,
+          };
+          slackService.sendTextMessage(JSON.stringify(errorResponse));
 
-        return <GraphQLFormattedError>{
-          status,
-          statusCode,
-          message,
-          path,
-        };
-      },
+          return <GraphQLFormattedError>{ ...errorResponse };
+        },
+      }),
     }),
   ],
 })

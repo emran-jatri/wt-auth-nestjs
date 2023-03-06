@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { WaterTransportCoreDataServices } from '../../repository';
-import { InitUserCreateDto } from './dtos';
+import { InitUserCreateDto, UserCreateDto, UserUpdateDto } from './dtos';
 import {
   CommissionTypeEnum,
   PermissionEnum,
@@ -9,7 +9,7 @@ import {
   RoleEnum,
 } from '../../common';
 import * as argon2 from 'argon2';
-import { ShouldValidate, ValidateArgs } from '../../common/decorators';
+import { ValidArgs, ValidateArgs } from '../../common/decorators';
 
 @Injectable()
 export class UserService {
@@ -19,7 +19,7 @@ export class UserService {
 
   @ValidateArgs()
   async init(
-    @ShouldValidate(InitUserCreateDto) initUserCreateDto: InitUserCreateDto,
+    @ValidArgs(InitUserCreateDto) initUserCreateDto: InitUserCreateDto,
   ) {
     const password = await argon2.hash(initUserCreateDto.password);
 
@@ -48,10 +48,11 @@ export class UserService {
     });
   }
 
-  async create(initUserCreateDto: InitUserCreateDto) {
-    const password = await argon2.hash(initUserCreateDto.password);
+  @ValidateArgs()
+  async create(@ValidArgs(UserCreateDto) userCreateDto: UserCreateDto) {
+    const password = await argon2.hash(userCreateDto.password);
     return this.waterTransportCoreDataServices.users.createOne({
-      ...initUserCreateDto,
+      ...userCreateDto,
       password,
       company: '',
       multipleCompany: [],
@@ -75,7 +76,16 @@ export class UserService {
     });
   }
 
-  update() {
-    return 'user create';
+  @ValidateArgs()
+  async update(
+    id: string,
+    @ValidArgs(UserUpdateDto) userUpdateDto: UserUpdateDto,
+  ) {
+    const { _id, ...updateData } = userUpdateDto;
+
+    if (updateData.password) {
+      updateData.password = await argon2.hash(updateData.password);
+    }
+    return this.waterTransportCoreDataServices.users.updateOne(id, updateData);
   }
 }

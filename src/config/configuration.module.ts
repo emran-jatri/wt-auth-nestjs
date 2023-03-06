@@ -5,14 +5,19 @@ import { MongoDBConfiguration } from './db';
 import { EnvConfiguration } from './env';
 import { GraphqlModule } from './graphql';
 import { JwtConfiguration } from './jwt';
+import { SlackConfiguration } from './slack';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [EnvConfiguration, MongoDBConfiguration, JwtConfiguration],
+      load: [
+        EnvConfiguration,
+        MongoDBConfiguration,
+        JwtConfiguration,
+        SlackConfiguration,
+      ],
     }),
-    GraphqlModule,
   ],
 })
 export class ConfigurationModule {}
