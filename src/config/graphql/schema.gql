@@ -12,7 +12,6 @@ type User {
   designation: String!
   phone: String!
   email: String!
-  password: String!
   nid: String!
   address: String!
   transactionType: String!

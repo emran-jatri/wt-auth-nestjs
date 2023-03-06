@@ -18,7 +18,6 @@ export class User {
   designation: string;
   phone: string;
   email: string;
-  password: string;
   nid: string;
   address: string;
   transactionType: string;

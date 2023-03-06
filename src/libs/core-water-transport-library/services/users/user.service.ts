@@ -9,6 +9,7 @@ import {
   RoleEnum,
 } from '../../common';
 import * as argon2 from 'argon2';
+import { ShouldValidate, ValidateArgs } from '../../common/decorators';
 
 @Injectable()
 export class UserService {
@@ -16,7 +17,10 @@ export class UserService {
     private readonly waterTransportCoreDataServices: WaterTransportCoreDataServices,
   ) {}
 
-  async init(initUserCreateDto: InitUserCreateDto) {
+  @ValidateArgs()
+  async init(
+    @ShouldValidate(InitUserCreateDto) initUserCreateDto: InitUserCreateDto,
+  ) {
     const password = await argon2.hash(initUserCreateDto.password);
 
     return this.waterTransportCoreDataServices.users.createOne({

@@ -32,6 +32,7 @@ export class LoginService {
       filter: {
         phone,
       },
+      projection: '+password',
     });
 
     if (!user) {

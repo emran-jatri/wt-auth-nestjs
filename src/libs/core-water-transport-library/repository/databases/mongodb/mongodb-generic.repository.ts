@@ -26,7 +26,8 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
   }
 
   findOne(queryOptions: Partial<MongoDBQueryOptions<T>> = {}): Promise<T> {
-    const { filter, projection, options } = queryOptions;
+    const { filter, projection = null, options = null } = queryOptions;
+
     const query = this._repository.findOne(filter, projection, options);
     // @ts-ignore
     return Promise.resolve(query.lean());
@@ -46,7 +47,11 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     return Promise.resolve(query.lean());
   }
   findMany(queryOptions: Partial<MongoDBQueryOptions<T>> = {}): Promise<T[]> {
-    const { filter, projection, options } = queryOptions;
+    const {
+      filter,
+      projection = null,
+      options = { strictQuery: false },
+    } = queryOptions;
     const query = this._repository.find(filter, projection, options);
     // @ts-ignore
     return Promise.resolve(query.lean());

@@ -37,7 +37,7 @@ export class User {
   @Prop({ type: String, trim: true })
   email: string;
 
-  @Prop({ type: String, trim: true, required: true })
+  @Prop({ type: String, trim: true, required: true, select: false })
   password: string;
 
   @Prop({ type: String, trim: true })
