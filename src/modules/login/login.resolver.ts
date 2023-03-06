@@ -28,8 +28,8 @@ export class LoginResolver {
     return this.loginService.refreshToken(refreshTokenInput);
   }
 
-  // @Permissions(PermissionEnum.GHAT_READ, PermissionEnum.DASHBOARD)
-  @Roles(RoleEnum.SUPERVISOR)
+  @Permissions(PermissionEnum.GHAT_READ)
+  // @Roles(RoleEnum.SUPERVISOR)
   @Query(() => User)
   getProfile(@CurrentUser() user) {
     return this.loginService.getProfile(user);

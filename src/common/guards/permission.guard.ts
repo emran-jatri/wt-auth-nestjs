@@ -24,12 +24,8 @@ export class PermissionGuard implements CanActivate {
       return true;
     }
     const { user } = GqlExecutionContext.create(context).getContext().req;
-    const hasPermission = permissions.some((permission) =>
+    return permissions.some((permission) =>
       user.permissions.includes(permission),
     );
-    if (!hasPermission) {
-      GQLForbiddenException('Permission Denied!');
-    }
-    return true;
   }
 }
