@@ -77,8 +77,10 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     return Promise.resolve(query.lean());
   }
   async createOne(item: T): Promise<T> {
-    const newItem = await this._repository.create(item);
-    return this.findOneById(newItem._id);
+    // const newItem = await this._repository.create(item);
+    // return this.findOneById(newItem._id);
+    const newItem = await new this._repository(item).save();
+    return newItem.populate(this._populateOnFind);
   }
   createMany(items: T[]): Promise<T[]> {
     const query = this._repository.insertMany(items, {
