@@ -18,13 +18,5 @@ export class SlackService {
     } catch (error) {
       logger.log(error.stack);
     }
-
-    // const res = await this.httpService.axiosRef.get(
-    //   'https://jsonplaceholder.typicode.com/users',
-    // );
-    // console.log(
-    //   '🚀 ~ file: slack.service.ts:26 ~ SlackService ~ sendTextMessage ~ res:',
-    //   res.data,
-    // );
   }
 }

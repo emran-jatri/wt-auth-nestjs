@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PERMISSIONS_KEY } from '../decorators';
-import { GqlExecutionContext } from '@nestjs/graphql';
+import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { PermissionEnum } from '../enums';
 import { GQLForbiddenException } from '../helpers';
 
@@ -24,8 +24,13 @@ export class PermissionGuard implements CanActivate {
       return true;
     }
     const { user } = GqlExecutionContext.create(context).getContext().req;
-    return permissions.some((permission) =>
+    const isPermitted = permissions.some((permission) =>
       user.permissions.includes(permission),
     );
+
+    if (!isPermitted && context.getType<GqlContextType>() === 'graphql') {
+      GQLForbiddenException('Permission Denied!');
+    }
+    return isPermitted;
   }
 }

@@ -4,7 +4,6 @@ import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { TrimPipe } from './common';
 
 async function bootstrap() {
   const logger = new Logger('main.ts', { timestamp: true });
@@ -19,7 +18,6 @@ async function bootstrap() {
         whitelist: true,
         transform: true,
       }),
-      new TrimPipe(),
     );
     app.enableVersioning({
       type: VersioningType.URI,

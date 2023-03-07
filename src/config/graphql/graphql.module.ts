@@ -66,7 +66,10 @@ const statusCodePlugin: ApolloServerPlugin = {
             message,
             path,
           };
-          slackService.sendTextMessage(JSON.stringify(errorResponse));
+
+          if (status === 'INTERNAL_SERVER_ERROR') {
+            slackService.sendTextMessage(JSON.stringify(errorResponse));
+          }
 
           return <GraphQLFormattedError>{ ...errorResponse };
         },

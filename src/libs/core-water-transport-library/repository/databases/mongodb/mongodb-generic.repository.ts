@@ -26,7 +26,8 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
   }
 
   findOne(queryOptions: Partial<MongoDBQueryOptions<T>> = {}): Promise<T> {
-    const { filter, projection = null, options = null } = queryOptions;
+    const { filter, projection = null, options } = queryOptions;
+    options.populate = options.populate ?? this._populateOnFind;
 
     const query = this._repository.findOne(filter, projection, options);
     // @ts-ignore
@@ -38,6 +39,9 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     queryOptions: Partial<MongoDBQueryOptions<T>> = {},
   ): Promise<T> {
     const { filter, projection, options } = queryOptions;
+
+    options.populate = options.populate ?? this._populateOnFind;
+
     const query = this._repository.findOne(
       { ...filter, _id: id },
       projection,
@@ -47,11 +51,10 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     return Promise.resolve(query.lean());
   }
   findMany(queryOptions: Partial<MongoDBQueryOptions<T>> = {}): Promise<T[]> {
-    const {
-      filter,
-      projection = null,
-      options = { strictQuery: false },
-    } = queryOptions;
+    const { filter, projection = null, options } = queryOptions;
+    options.strictQuery = options.strictQuery ?? true;
+    options.populate = options.populate ?? this._populateOnFind;
+
     const query = this._repository.find(filter, projection, options);
     // @ts-ignore
     return Promise.resolve(query.lean());
@@ -62,6 +65,9 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     queryOptions: Partial<MongoDBQueryOptions<T>> = {},
   ): Promise<T[]> {
     const { filter, paginateOptions } = queryOptions;
+
+    paginateOptions.populate = paginateOptions.populate ?? this._populateOnFind;
+
     const query = this._repository.paginate(filter, {
       ...paginateOptions,
       page,
@@ -70,8 +76,9 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     // @ts-ignore
     return Promise.resolve(query.lean());
   }
-  createOne(item: T): Promise<T> {
-    return this._repository.create(item);
+  async createOne(item: T): Promise<T> {
+    const newItem = await this._repository.create(item);
+    return this.findOneById(newItem._id);
   }
   createMany(items: T[]): Promise<T[]> {
     const query = this._repository.insertMany(items, {
@@ -86,6 +93,8 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     queryOptions: Partial<MongoDBQueryOptions<T>> = {},
   ): Promise<T> {
     const { filter, options } = queryOptions;
+    options.populate = options.populate ?? this._populateOnFind;
+
     const query = this._repository.findOneAndUpdate(
       { ...filter, _id: id },
       partialData,
@@ -99,6 +108,8 @@ export class MongoDBGenericRepository<T> implements GenericRepository<T> {
     queryOptions: Partial<MongoDBQueryOptions<T>> = {},
   ): Promise<T[]> {
     const { filter, options } = queryOptions;
+    options.populate = options.populate ?? this._populateOnFind;
+
     const query = this._repository.updateMany(filter, partialData, options);
     // @ts-ignore
     return Promise.resolve(query);
